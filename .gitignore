@@ -39,3 +39,6 @@ Thumbs.db
 *.json
 *.vcxproj.user
 *.DotSettings.user
+
+!SFML-3.0.0/**
+
