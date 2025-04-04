@@ -25,14 +25,27 @@ void Ball::move(int windowX, int windowY)
     
     ball->move(velocity);
 
-    tryChangeDirrection(isBallOutOfFieldByX(windowX), isBallOutOfFieldByY(windowY));
+    tryChangeDirrection(isBallOutOfFieldByX(windowX, windowY), isBallOutOfFieldByY(windowY));
 }
 
-bool Ball::isBallOutOfFieldByX(int windowX) const
+bool Ball::isBallOutOfFieldByX(int windowX, int windowY) const
 {
-    float x = ball->getPosition().x;
-    return (x - ballRadius <= 0.f) || (x + ballRadius >= static_cast<float>(windowX));
+    const float x = ball->getPosition().x;
+    const float y = ball->getPosition().y;
+
+    const float goalTop = windowY / 3.f + ballRadius;
+    const float goalBottom = 2.f * windowY / 3.f - ballRadius;
+
+    const bool outsideGoal = y < goalTop || y > goalBottom;
+
+    if ((x - ballRadius <= 0.f || x + ballRadius >= static_cast<float>(windowX)) && outsideGoal)
+    {
+        return true;
+    }
+
+    return false;
 }
+
 
 bool Ball::isBallOutOfFieldByY(int windowY) const
 {
@@ -91,4 +104,11 @@ bool Ball::isTouching(sf::Vector2f playerPos, float playerRadius)
     float combinedRadius = ballRadius + playerRadius;
 
     return distanceSquared <= combinedRadius * combinedRadius;
+}
+
+void Ball::reset(int windowX, int windowY)
+{
+    ball->setPosition({windowX / 2.f, windowY / 2.f});
+
+    speed = 200.0f;
 }

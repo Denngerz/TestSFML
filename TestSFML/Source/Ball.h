@@ -20,8 +20,10 @@ public:
 
     bool isTouching(sf::Vector2f playerPos, float playerRadius);
 
+    void reset(int windowX, int windowY);
+
 private:
-    bool isBallOutOfFieldByX(int windowX) const;
+    bool isBallOutOfFieldByX(int windowX, int windowY) const;
     
     bool isBallOutOfFieldByY(int windowY) const;
     

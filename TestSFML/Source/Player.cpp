@@ -49,7 +49,7 @@ void Player::tryCorrectPlayerPosition(int windowX, int windowY)
     
     tryCorrectByWindow(windowX, windowY, playerPosition);
 
-    tryCorrectByMiddle(windowX, windowY, playerPosition);    
+    tryCorrectByMiddle(windowX, playerPosition);    
 }
 
 void Player::tryCorrectByWindow(int windowX, int windowY, sf::Vector2f playerPosition)
@@ -75,7 +75,7 @@ void Player::tryCorrectByWindow(int windowX, int windowY, sf::Vector2f playerPos
     }
 }
 
-void Player::tryCorrectByMiddle(int windowX, int windowY, sf::Vector2f playerPosition)
+void Player::tryCorrectByMiddle(int windowX, sf::Vector2f playerPosition)
 {
     if(isOnLeft && mallet->getPosition().x + malletRadius > (windowX/2.f))
     {

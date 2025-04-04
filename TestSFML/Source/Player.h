@@ -26,7 +26,7 @@ public:
     
     void tryCorrectByWindow(int windowX, int windowY, sf::Vector2f playerPosition);
     
-    void tryCorrectByMiddle(int windowX, int windowY, sf::Vector2f playerPosition);
+    void tryCorrectByMiddle(int windowX, sf::Vector2f playerPosition);
     
     void resetVelocity();
 

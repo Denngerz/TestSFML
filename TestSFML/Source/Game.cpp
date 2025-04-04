@@ -43,18 +43,22 @@ void Game::logic()
 {
     Time::update();
         
-    hockeyPuck->move(window->getSize().x, window->getSize().y);
+    movePuck();
 
-    tryMovePlayer(*firstPlayer);
-    
-    tryMovePlayer(*secondPlayer);
+    tryMovePlayers();
 
     tryHandleHit();
+
+    tryHandleGoal();
+
+    tryRestartRound();
 }
 
 void Game::draw()
 {
     window->clear(sf::Color::Green);
+
+    gameWindow->drawLines();
     
     window->draw(*hockeyPuck->ball);
     window->draw(*firstPlayer->mallet);
@@ -103,6 +107,49 @@ void Game::tryHandleHit()
     }
 }
 
+void Game::handleGoal(AirHockeyPlayer& scoredPlayer)
+{
+    scoredPlayer.score++;
+}
+
+void Game::tryHandleGoal()
+{
+    if(didPuckTouchLeftGoal())
+    {
+        handleGoal(*secondPlayer);
+        shouldRestart = true;
+    }
+    if(didPuckTouchRightGoal())
+    {
+        handleGoal(*firstPlayer);
+        shouldRestart = true;
+    }
+}
+
+void Game::tryRestartRound()
+{
+    if(shouldRestart)
+    {
+        shouldRestart = false;
+        restartRound();
+    }
+}
+
+bool Game::didPuckTouchLeftGoal()
+{
+    return gameWindow->doesPuckTouchLeftGoal(hockeyPuck->ball->getPosition());
+}
+
+bool Game::didPuckTouchRightGoal()
+{
+    return gameWindow->doesPuckTouchRightGoal(hockeyPuck->ball->getPosition());
+}
+
+void Game::restartRound()
+{
+    hockeyPuck->reset(window->getSize().x, window->getSize().y);
+}
+
 void Game::generateWindow()
 {
     gameWindow = new Window(800, 600, "AirHockey");
@@ -133,6 +180,10 @@ void Game::generateTimer()
 
 bool Game::isEndGame()
 {
+    if(firstPlayer->score >= 3 || secondPlayer->score >= 3)
+    {
+        return true;
+    }
     while(const std::optional event = window->pollEvent())
     {
         return event->is<sf::Event::Closed>();
@@ -204,4 +255,16 @@ void Game::tryMovePlayer(AirHockeyPlayer& player)
     }
 
     player.player->resetVelocity();
+}
+
+void Game::tryMovePlayers()
+{
+    tryMovePlayer(*firstPlayer);
+    
+    tryMovePlayer(*secondPlayer);
+}
+
+void Game::movePuck()
+{
+    hockeyPuck->move(window->getSize().x, window->getSize().y);
 }

@@ -19,6 +19,8 @@ struct AirHockeyPlayer
     bool moved = false;
 
     bool didHitPuck = false;
+
+    int score = 0;
 };
 
 class Game
@@ -62,6 +64,10 @@ public:
     
     void tryMovePlayer(AirHockeyPlayer& player);
 
+    void tryMovePlayers();
+    
+    void movePuck();
+
     void logic();
 
     void getInput();
@@ -73,4 +79,18 @@ public:
     bool isPlayerTouchingPuck(AirHockeyPlayer& player);
     
     void tryHandleHit();
+
+    void handleGoal(AirHockeyPlayer& scoredPlayer);
+
+    void tryHandleGoal();
+
+    void tryRestartRound();
+    
+    bool didPuckTouchLeftGoal();
+    
+    bool didPuckTouchRightGoal();
+
+    void restartRound();
+
+    bool shouldRestart = false;
 };
