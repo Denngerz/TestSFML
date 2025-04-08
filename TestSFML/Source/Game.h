@@ -16,6 +16,8 @@ struct AirHockeyPlayer
 
     std::shared_ptr<sf::CircleShape> mallet;
 
+    sf::Color playerColor;
+
     bool moved = false;
 
     bool didHitPuck = false;
@@ -37,11 +39,7 @@ public:
     std::shared_ptr<AirHockeyPlayer> firstPlayer;
 
     std::shared_ptr<AirHockeyPlayer> secondPlayer;
-
-    sf::Color firstPlayerColor = sf::Color::Blue;
-
-    sf::Color secondPlayerColor = sf::Color::Red;
-
+    
     void startGame();
 
     void generate();

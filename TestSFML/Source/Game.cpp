@@ -211,12 +211,15 @@ void Game::initializePlayers()
 {
     firstPlayer = std::make_shared<AirHockeyPlayer>();
     secondPlayer = std::make_shared<AirHockeyPlayer>();
+
+    firstPlayer->playerColor = sf::Color::Blue;
+    secondPlayer->playerColor = sf::Color::Red;
     
     firstPlayer->player = std::make_shared<Player>(30);
     secondPlayer->player = std::make_shared<Player>(30);
 
-    firstPlayer->player->initialize(firstPlayerColor, window->getSize().x, window->getSize().y, true);
-    secondPlayer->player->initialize(secondPlayerColor, window->getSize().x, window->getSize().y, false);
+    firstPlayer->player->initialize(firstPlayer->playerColor, window->getSize().x, window->getSize().y, true);
+    secondPlayer->player->initialize(secondPlayer->playerColor, window->getSize().x, window->getSize().y, false);
 
     firstPlayer->mallet = firstPlayer->player->mallet;
     secondPlayer->mallet = secondPlayer->player->mallet;
