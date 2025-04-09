@@ -3,7 +3,7 @@
 #include <SFML/Graphics.hpp>
 
 class Window;
-class Ball;
+class Puck;
 class Player;
 
 struct AirHockeyPlayer
@@ -20,8 +20,6 @@ struct AirHockeyPlayer
 
     bool moved = false;
 
-    bool didHitPuck = false;
-
     int score = 0;
 };
 
@@ -34,7 +32,7 @@ public:
 
     std::shared_ptr<sf::RenderWindow> window;
     
-    Ball* hockeyPuck;
+    std::shared_ptr<Puck> hockeyPuck;
 
     std::shared_ptr<AirHockeyPlayer> firstPlayer;
 

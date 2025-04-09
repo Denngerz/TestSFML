@@ -1,9 +1,9 @@
 ﻿#include "Game.h"
 #include "Window.h"
 #include <SFML/Graphics.hpp>
-#include "Ball.h"
 #include "Time.h"
 #include "Player.h"
+#include "Puck.h"
 
 Game::Game()
 {
@@ -60,7 +60,7 @@ void Game::draw()
 
     gameWindow->drawLines();
     
-    window->draw(*hockeyPuck->ball);
+    window->draw(*hockeyPuck->puckShape);
     window->draw(*firstPlayer->mallet);
     window->draw(*secondPlayer->mallet);
     
@@ -69,41 +69,25 @@ void Game::draw()
 
 void Game::handleHit(AirHockeyPlayer& player)
 {
-    hockeyPuck->implementHit(player.mallet->getPosition(), player.player->velocity, player.player->mass);
+    hockeyPuck->implementHit(player.mallet->getPosition(), player.player->velocity, player.player->malletRadius);
 }
 
 bool Game::isPlayerTouchingPuck(AirHockeyPlayer& player)
 {
-    return hockeyPuck->isTouching(player.mallet->getPosition(), player.mallet->getRadius());
+    return hockeyPuck->isTouchingPlayer(player.mallet->getPosition(), player.mallet->getRadius());
 }
 
 void Game::tryHandleHit()
 {
     if(isPlayerTouchingPuck(*firstPlayer))
     {
-        if(!firstPlayer->didHitPuck)
-        {
-            handleHit(*firstPlayer);
-            firstPlayer->didHitPuck = true;
-            return;
-        }
-    }
-    else
-    {
-        firstPlayer->didHitPuck = false;
+        handleHit(*firstPlayer);
+        return;
     }
     
     if(isPlayerTouchingPuck(*secondPlayer))
     {
-        if(!secondPlayer->didHitPuck)
-        {
-            handleHit(*secondPlayer);
-            secondPlayer->didHitPuck = true;
-        }
-    }
-    else
-    {
-        secondPlayer->didHitPuck = false;
+        handleHit(*secondPlayer);
     }
 }
 
@@ -137,12 +121,12 @@ void Game::tryRestartRound()
 
 bool Game::didPuckTouchLeftGoal()
 {
-    return gameWindow->doesPuckTouchLeftGoal(hockeyPuck->ball->getPosition());
+    return gameWindow->doesPuckTouchLeftGoal(hockeyPuck->puckShape->getPosition());
 }
 
 bool Game::didPuckTouchRightGoal()
 {
-    return gameWindow->doesPuckTouchRightGoal(hockeyPuck->ball->getPosition());
+    return gameWindow->doesPuckTouchRightGoal(hockeyPuck->puckShape->getPosition());
 }
 
 void Game::restartRound()
@@ -161,9 +145,9 @@ void Game::generateWindow()
 
 void Game::generateHockeyPuck()
 {
-    hockeyPuck = new Ball(20);
+    hockeyPuck = std::make_shared<Puck>(20, gameWindow->goalTopPositionY, gameWindow->goalTopPositionY + gameWindow->goalLength);
 
-    hockeyPuck->initialize(window->getSize().x, window->getSize().y);
+    hockeyPuck->initialize(sf::Color::White, window->getSize().x, window->getSize().y);
 }
 
 void Game::generatePlayers()

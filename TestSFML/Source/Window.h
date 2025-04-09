@@ -9,7 +9,18 @@ namespace sf
     class RectangleShape;
 }
 
-class Ball;
+struct Goal
+{
+    std::shared_ptr<sf::RectangleShape> goalShape;
+
+    float goalLength;
+
+    float goalWidth;
+
+    void initializeGoal(float windowWidth, float windowHeight, float goalTopY, float length, float width);
+
+    void placeGoal(float windowWidth, float windowHeight, bool isOnRight);
+};
 
 class Window
 {
@@ -26,9 +37,9 @@ public:
 
     std::shared_ptr<sf::RectangleShape> verticalLine;
 
-    std::shared_ptr<sf::RectangleShape> leftLine;
+    std::shared_ptr<Goal> leftGoal;
 
-    std::shared_ptr<sf::RectangleShape> rightLine;
+    std::shared_ptr<Goal> rightGoal;
 
     void initialize();
 
@@ -37,4 +48,10 @@ public:
     bool doesPuckTouchLeftGoal(sf::Vector2f puckPosition);
 
     bool doesPuckTouchRightGoal(sf::Vector2f puckPosition);
+
+    float goalTopPositionY;
+
+    float goalLength;
+
+    float goalWidth;
 };

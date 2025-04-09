@@ -31,6 +31,4 @@ public:
     void resetVelocity();
 
     bool isOnLeft;
-
-    float mass = 300.0f;
 };
