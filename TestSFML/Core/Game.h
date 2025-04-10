@@ -4,15 +4,12 @@
 
 class Window;
 class Puck;
-class Player;
+class Mallet;
+class InputAction;
 
 struct AirHockeyPlayer
 {
-    std::shared_ptr<Player> player;
-
-    sf::Vector2f currentMalletDirrection;
-
-    std::unordered_map<sf::Keyboard::Key, sf::Vector2f> keyBindings;
+    std::shared_ptr<Mallet> player;
 
     std::shared_ptr<sf::CircleShape> mallet;
 
@@ -28,7 +25,18 @@ class Game
 public:
     Game();
 
+    void startGame();
+    
+    void logic();
+    
+    void getInput();
+
+    void draw();
+
+private:
     Window* gameWindow;
+
+    std::shared_ptr<InputAction> inputAction;
 
     std::shared_ptr<sf::RenderWindow> window;
     
@@ -37,12 +45,12 @@ public:
     std::shared_ptr<AirHockeyPlayer> firstPlayer;
 
     std::shared_ptr<AirHockeyPlayer> secondPlayer;
-    
-    void startGame();
 
     void generate();
 
     void generateWindow();
+
+    void movePlayers();
 
     void generateHockeyPuck();
 
@@ -56,19 +64,7 @@ public:
     
     void initializePlayers();
     
-    void processPlayerInput(AirHockeyPlayer& player);
-    
-    void tryMovePlayer(AirHockeyPlayer& player);
-
-    void tryMovePlayers();
-    
     void movePuck();
-
-    void logic();
-
-    void getInput();
-
-    void draw();
 
     void handleHit(AirHockeyPlayer& player);
 

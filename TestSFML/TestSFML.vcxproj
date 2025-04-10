@@ -168,9 +168,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Source\CircleObject.cpp" />
-    <ClCompile Include="Source\Game.cpp">
+    <ClCompile Include="Core\Game.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
       <AssemblerListingLocation>Release\</AssemblerListingLocation>
       <UndefineAllPreprocessorDefinitions>false</UndefineAllPreprocessorDefinitions>
@@ -248,6 +246,9 @@
       <AdditionalIncludeDirectories>\SFML-3.0.0\include;;C:\vcpkg\installed\x86-windows\include;C:\vcpkg\installed\x86-windows\include</AdditionalIncludeDirectories>
       <LinkCompiled>true</LinkCompiled>
     </ClCompile>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Source\CircleObject.cpp" />
+    <ClCompile Include="Source\InputAction.cpp" />
     <ClCompile Include="Source\Mallet.cpp" />
     <ClCompile Include="Source\Player.cpp">
       <AssemblerOutput>NoListing</AssemblerOutput>
@@ -486,8 +487,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Game.h" />
     <ClInclude Include="Source\CircleObject.h" />
-    <ClInclude Include="Source\Game.h" />
+    <ClInclude Include="Source\InputAction.h" />
     <ClInclude Include="Source\Mallet.h" />
     <ClInclude Include="Source\Player.h" />
     <ClInclude Include="Source\Puck.h" />

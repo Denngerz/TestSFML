@@ -7,17 +7,7 @@ class CircleObject
 public:
     CircleObject(float radius);
     
-    std::shared_ptr<sf::CircleShape> circle;
-
-    sf::Vector2f velocity;
-
-    sf::Vector2f direction;
-
-    float speed;
-
     void initialize(sf::Color color);
-
-    float circleRadius;
 
     void move();
     
@@ -38,4 +28,16 @@ public:
     float getRadius() const;
 
     std::shared_ptr<sf::CircleShape> getShape() const;
+
+private:
+    std::shared_ptr<sf::CircleShape> circle;
+    
+    sf::Vector2f velocity;
+
+    sf::Vector2f direction;
+    
+    float circleRadius;
+    
+    float speed;
+
 };

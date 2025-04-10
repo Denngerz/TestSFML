@@ -39,9 +39,7 @@ private:
     
     bool isApproaching(float approachSpeed);
     
-    sf::Vector2f computeFinalVelocity(const sf::Vector2f& relativeVelocity, const sf::Vector2f& normal,
-                                      float approachSpeed,
-                                      const sf::Vector2f& playerVelocity);
+    sf::Vector2f computeFinalVelocity(const sf::Vector2f& relativeVelocity, const sf::Vector2f& normal,float approachSpeed,const sf::Vector2f& playerVelocity);
 
     void handleVerticalCollision(sf::Vector2f& pos, sf::Vector2f& dir, int windowY);
     

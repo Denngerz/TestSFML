@@ -23,5 +23,13 @@ public:
     void handleVerticalCollision(sf::Vector2f& pos, int windowY);
     
     void handleHorizontalCollision(sf::Vector2f& pos, int windowX);
+
+    sf::Vector2f getVelocity();
+
+    void setDirection(sf::Vector2f direction);
+
+    sf::Vector2f getDirection();
+
+    float malletSpeed = 400;
     
 };

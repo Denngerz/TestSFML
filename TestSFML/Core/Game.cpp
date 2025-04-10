@@ -1,9 +1,10 @@
 ﻿#include "Game.h"
-#include "Window.h"
+#include "../Source/Window.h"
 #include <SFML/Graphics.hpp>
-#include "Time.h"
-#include "Player.h"
-#include "Puck.h"
+#include "../Source/InputAction.h"
+#include "../Source/Mallet.h"
+#include "../Source/Time.h"
+#include "../Source/Puck.h"
 
 Game::Game()
 {
@@ -34,9 +35,13 @@ void Game::generate()
 
 void Game::getInput()
 {
-    processPlayerInput(*firstPlayer);
-    
-    processPlayerInput(*secondPlayer);
+   while(const std::optional event = window->pollEvent())
+   {
+       if(event->is<sf::Event::KeyPressed>())
+       {
+           inputAction->HandleEvent(*event);
+       }
+   }
 }
 
 void Game::logic()
@@ -45,7 +50,7 @@ void Game::logic()
         
     movePuck();
 
-    tryMovePlayers();
+    movePlayers();
 
     tryHandleHit();
 
@@ -69,7 +74,7 @@ void Game::draw()
 
 void Game::handleHit(AirHockeyPlayer& player)
 {
-    hockeyPuck->implementHit(player.mallet->getPosition(), player.player->velocity, player.player->malletRadius);
+    hockeyPuck->implementHit(player.mallet->getPosition(), player.player->getVelocity(), player.player->malletRadius);
 }
 
 bool Game::isPlayerTouchingPuck(AirHockeyPlayer& player)
@@ -143,6 +148,12 @@ void Game::generateWindow()
     window = gameWindow->window;
 }
 
+void Game::movePlayers()
+{
+    firstPlayer->player->move(window->getSize().x, window->getSize().y);
+    secondPlayer->player->move(window->getSize().x, window->getSize().y);
+}
+
 void Game::generateHockeyPuck()
 {
     hockeyPuck = std::make_shared<Puck>(20, gameWindow->goalTopPositionY, gameWindow->goalTopPositionY + gameWindow->goalLength);
@@ -176,19 +187,27 @@ bool Game::isEndGame()
 
 void Game::generatePlayersBindings()
 {
-    firstPlayer->keyBindings = {
-        {sf::Keyboard::Key::W, sf::Vector2f(0.0f, -1.0f)},
-        {sf::Keyboard::Key::S, sf::Vector2f(0.0f, 1.0f)},
-        {sf::Keyboard::Key::A, sf::Vector2f(-1.0f, 0.0f)},
-        {sf::Keyboard::Key::D, sf::Vector2f(1.0f, 0.0f)}
-    };
+    inputAction = std::make_shared<InputAction>();
 
-    secondPlayer->keyBindings = {
-        {sf::Keyboard::Key::I, sf::Vector2f(0.0f, -1.0f)},
-        {sf::Keyboard::Key::K, sf::Vector2f(0.0f, 1.0f)},
-        {sf::Keyboard::Key::J, sf::Vector2f(-1.0f, 0.0f)},
-        {sf::Keyboard::Key::L, sf::Vector2f(1.0f, 0.0f)}
-    };
+    inputAction->BindKey(sf::Keyboard::Key::W, "W");
+    inputAction->BindKey(sf::Keyboard::Key::S, "S");
+    inputAction->BindKey(sf::Keyboard::Key::A, "A");
+    inputAction->BindKey(sf::Keyboard::Key::D, "D");
+
+    inputAction->BindKey(sf::Keyboard::Key::I, "I");
+    inputAction->BindKey(sf::Keyboard::Key::K, "K");
+    inputAction->BindKey(sf::Keyboard::Key::J, "J");
+    inputAction->BindKey(sf::Keyboard::Key::L, "L");
+    
+    inputAction->BindAction("W",    [this]() { firstPlayer->player->setDirection({firstPlayer->player->getDirection().x, -1.f}); });
+    inputAction->BindAction("S",  [this]() { firstPlayer->player->setDirection({firstPlayer->player->getDirection().x,  1.f}); });
+    inputAction->BindAction("A",  [this]() { firstPlayer->player->setDirection({-1.f, firstPlayer->player->getDirection().y}); });
+    inputAction->BindAction("D", [this]() { firstPlayer->player->setDirection({1.f,  firstPlayer->player->getDirection().y}); });
+
+    inputAction->BindAction("I",    [this]() { secondPlayer->player->setDirection({secondPlayer->player->getDirection().x, -1.f}); });
+    inputAction->BindAction("K",  [this]() { secondPlayer->player->setDirection({secondPlayer->player->getDirection().x,  1.f}); });
+    inputAction->BindAction("J",  [this]() { secondPlayer->player->setDirection({-1.f, secondPlayer->player->getDirection().y}); });
+    inputAction->BindAction("L", [this]() { secondPlayer->player->setDirection({1.f,  secondPlayer->player->getDirection().y}); });
 }
 
 void Game::initializePlayers()
@@ -199,56 +218,14 @@ void Game::initializePlayers()
     firstPlayer->playerColor = sf::Color::Blue;
     secondPlayer->playerColor = sf::Color::Red;
     
-    firstPlayer->player = std::make_shared<Player>(30);
-    secondPlayer->player = std::make_shared<Player>(30);
+    firstPlayer->player = std::make_shared<Mallet>(30);
+    secondPlayer->player = std::make_shared<Mallet>(30);
 
-    firstPlayer->player->initialize(firstPlayer->playerColor, window->getSize().x, window->getSize().y, true);
-    secondPlayer->player->initialize(secondPlayer->playerColor, window->getSize().x, window->getSize().y, false);
+    firstPlayer->player->initialize(firstPlayer->playerColor, true, window->getSize().x, window->getSize().y);
+    secondPlayer->player->initialize(secondPlayer->playerColor, false, window->getSize().x, window->getSize().y);
 
-    firstPlayer->mallet = firstPlayer->player->mallet;
-    secondPlayer->mallet = secondPlayer->player->mallet;
-}
-
-void Game::processPlayerInput(AirHockeyPlayer& player)
-{
-    player.currentMalletDirrection = sf::Vector2f(0.0f, 0.0f);
-    
-    auto updateVelocity = [&player](const auto& pair)
-    {
-        if (sf::Keyboard::isKeyPressed(pair.first))
-        {
-            player.currentMalletDirrection = pair.second;
-            player.moved = true;
-        }
-    };
-
-    for (const auto& binding : player.keyBindings)
-    {
-        updateVelocity(binding);
-    }
-}
-
-void Game::tryMovePlayer(AirHockeyPlayer& player)
-{
-    if(player.moved)
-    {
-        player.player->direction = player.currentMalletDirrection;
-        
-        player.player->move(window->getSize().x, window->getSize().y);
-        
-        player.moved = false;
-
-        return;
-    }
-
-    player.player->resetVelocity();
-}
-
-void Game::tryMovePlayers()
-{
-    tryMovePlayer(*firstPlayer);
-    
-    tryMovePlayer(*secondPlayer);
+    firstPlayer->mallet = firstPlayer->player->malletShape;
+    secondPlayer->mallet = secondPlayer->player->malletShape;
 }
 
 void Game::movePuck()

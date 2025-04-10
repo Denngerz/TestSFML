@@ -11,9 +11,11 @@ void Mallet::initialize(sf::Color color, bool isOnLeft, int windowX, int windowY
 
     isMalletOnLeft = isOnLeft;
 
-    malletShape = CircleObject::getShape();
+    malletShape = getShape();
 
     setInitialPosition(windowX, windowY);
+
+    setSpeed(malletSpeed);
 }
 
 void Mallet::setInitialPosition(int windowX, int windowY)
@@ -67,4 +69,19 @@ void Mallet::handleHorizontalCollision(sf::Vector2f& pos, int windowX)
     {
         pos.x = windowX - malletRadius;
     }
+}
+
+sf::Vector2f Mallet::getVelocity()
+{
+    return CircleObject::getVelocity();
+}
+
+void Mallet::setDirection(sf::Vector2f direction)
+{
+    CircleObject::setDirection(direction);
+}
+
+sf::Vector2f Mallet::getDirection()
+{
+    return  CircleObject::getDirection();
 }
