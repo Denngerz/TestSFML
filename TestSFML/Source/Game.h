@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 #include <SFML/Graphics.hpp>
+#include "../Core/GameLoop.h"
 
 class Window;
 class Puck;
@@ -20,7 +21,7 @@ struct AirHockeyPlayer
     int score = 0;
 };
 
-class Game
+class Game:GameLoop
 {
 public:
     Game();
