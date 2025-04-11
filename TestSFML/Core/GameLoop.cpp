@@ -1,7 +1,4 @@
 ﻿#include "GameLoop.h"
-
-#include <iostream>
-
 #include "../Time/Time.h"
 
 GameLoop::GameLoop(unsigned int windowWidth, unsigned int windowHeight, std::string windowTitle, sf::Color clearColor)
@@ -25,8 +22,6 @@ void GameLoop::runLoop()
         logic();
         draw();
     }
-
-    std::cout << isEndGame() << std::endl;
 }
 
 void GameLoop::generate()
@@ -53,7 +48,6 @@ bool GameLoop::isEndGame()
     {
         if(event->is<sf::Event::Closed>())
         {
-            std::cout << "Closing..." << std::endl;
             return true;
         }
         return false;
