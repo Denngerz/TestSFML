@@ -4,32 +4,28 @@
 class Puck: CircleObject
 {
 public:
-    Puck(float radius, float goalTopY, float goalBottomY);
+    Puck(float radius, int windowX, int windowY, sf::Color color);
 
-    void initialize(sf::Color color, int windowX, int windowY);
+    void initialize(sf::Color color);
     
-    void placeInCenter(int windowX, int windowY);
+    void placeInCenter();
 
-    void move(int windowX, int windowY);
+    void move();
 
     void implementHit(sf::Vector2f playerPosition, sf::Vector2f playerVelocity ,float playerRadius);
     
     bool isTouchingPlayer(sf::Vector2f playerPos, float playerRadius);
     
-    void reset(int windowX, int windowY);
+    void reset();
 
     std::shared_ptr<sf::CircleShape> puckShape;
 
 private:
     float puckSpeed = 300;
 
-    float goalTop;
-
-    float goalBottom;
-
     float puckRadius;
     
-    void handleWallCollision(int windowX, int windowY);
+    void handleWallCollision();
     
     sf::Vector2f normalize(const sf::Vector2f& v) const;
     
@@ -41,7 +37,7 @@ private:
     
     sf::Vector2f computeFinalVelocity(const sf::Vector2f& relativeVelocity, const sf::Vector2f& normal,float approachSpeed,const sf::Vector2f& playerVelocity);
 
-    void handleVerticalCollision(sf::Vector2f& pos, sf::Vector2f& dir, int windowY);
+    void handleVerticalCollision(sf::Vector2f& pos, sf::Vector2f& dir);
     
-    void handleHorizontalCollision(sf::Vector2f& pos, sf::Vector2f& dir, int windowX);
+    void handleHorizontalCollision(sf::Vector2f& pos, sf::Vector2f& dir);
 };

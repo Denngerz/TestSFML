@@ -1,53 +1,53 @@
 ﻿#include "Puck.h"
 
-Puck::Puck(float radius, float goalTopY, float goalBottomY): CircleObject(radius)
+Puck::Puck(float radius, int windowX, int windowY, sf::Color color): CircleObject(radius, windowX, windowY)
 {
-    goalTop = goalTopY;
-
-    goalBottom = goalBottomY;
-
     puckRadius = radius;
+
+    initialize(color);
+
+    placeInCenter();
 }
 
-void Puck::initialize(sf::Color color, int windowX, int windowY)
+void Puck::initialize(sf::Color color)
 {
     CircleObject::initialize(color);
 
     puckShape = getShape();
 
-    placeInCenter(windowX, windowY);
+    placeInCenter();
 
     setSpeed(puckSpeed);
 
     setDirection(sf::Vector2f(1.f, 1.f));
 }
 
-void Puck::placeInCenter(int windowX, int windowY)
+void Puck::placeInCenter()
 {
     setPosition(sf::Vector2f(windowX / 2, windowY / 2));
 }
 
-void Puck::move(int windowX, int windowY)
+void Puck::move()
 {
     CircleObject::move();
 
-    handleWallCollision(windowX, windowY);
+    handleWallCollision();
 }
 
-void Puck::handleWallCollision(int windowX, int windowY)
+void Puck::handleWallCollision()
 {
     sf::Vector2f pos = getPosition();
     sf::Vector2f dir = getDirection();
 
-    handleVerticalCollision(pos, dir, windowY);
-    handleHorizontalCollision(pos, dir, windowX);
+    handleVerticalCollision(pos, dir);
+    handleHorizontalCollision(pos, dir);
 
     setPosition(pos);
     setDirection(dir);
 }
 
 
-void Puck::handleVerticalCollision(sf::Vector2f& pos, sf::Vector2f& dir, int windowY)
+void Puck::handleVerticalCollision(sf::Vector2f& pos, sf::Vector2f& dir)
 {
     if (pos.y - puckRadius < 0.f)
     {
@@ -61,15 +61,8 @@ void Puck::handleVerticalCollision(sf::Vector2f& pos, sf::Vector2f& dir, int win
     }
 }
 
-void Puck::handleHorizontalCollision(sf::Vector2f& pos, sf::Vector2f& dir, int windowX)
+void Puck::handleHorizontalCollision(sf::Vector2f& pos, sf::Vector2f& dir)
 {
-    bool isInGoalZone = pos.y - puckRadius > goalTop && pos.y + puckRadius < goalBottom;
-
-    if (isInGoalZone)
-    {
-        return;
-    }
-
     if (pos.x - puckRadius < 0.f)
     {
         pos.x = puckRadius;
@@ -93,9 +86,9 @@ bool Puck::isTouchingPlayer(sf::Vector2f playerPos, float playerRadius)
     return distanceSquared <= combinedRadius * combinedRadius;
 }
 
-void Puck::reset(int windowX, int windowY)
+void Puck::reset()
 {
-    placeInCenter(windowX, windowY);
+    placeInCenter();
 
     speed = 100;
 }

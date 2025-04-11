@@ -14,18 +14,18 @@ public:
     GameLoop(unsigned int windowWidth, unsigned int windowHeight, std::string windowTitle, sf::Color clearColor);
 
     std::shared_ptr<sf::RenderWindow> getWindow() const;
+
+    virtual void runLoop();
+
+    virtual void generate();
+
+    virtual void logic();
     
-    void RunLoop();
+    virtual void getInput();
 
-    void generate();
+    virtual void draw();
 
-    void logic();
-    
-    void getInput();
-
-    void draw();
-
-    bool isEndGame();
+    virtual bool isEndGame();
 
     std::shared_ptr<sf::RenderWindow> window;
 

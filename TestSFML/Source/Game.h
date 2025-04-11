@@ -1,89 +1,67 @@
 ﻿#pragma once
-#include <memory>
 #include <SFML/Graphics.hpp>
 #include "../Core/GameLoop.h"
 
-class Window;
-class Puck;
 class Mallet;
+class Puck;
 class InputAction;
 
 struct AirHockeyPlayer
 {
-    std::shared_ptr<Mallet> player;
+    AirHockeyPlayer(int radius, sf::Color color, bool isOnLeft, int windowX, int windowY);
+    
+    std::shared_ptr<Mallet> playersMallet;
 
-    std::shared_ptr<sf::CircleShape> mallet;
+    sf::Color malletColor;
 
-    sf::Color playerColor;
+    std::shared_ptr<InputAction> inputAction;
 
-    bool moved = false;
+    int scoredGoals = 0;
 
-    int score = 0;
+    bool didPlayerWon();
 };
 
 class Game:GameLoop
 {
 public:
     Game();
+    
+    void generate();
 
-    void startGame();
-    
+    void runLoop();
+
     void logic();
-    
+
     void getInput();
 
+    bool isEndGame();
+
     void draw();
-
+  
 private:
-    Window* gameWindow;
-
-    std::shared_ptr<InputAction> inputAction;
-
-    std::shared_ptr<sf::RenderWindow> window;
+    static constexpr int windowWidth = 800;
     
-    std::shared_ptr<Puck> hockeyPuck;
+    static constexpr int windowHeight = 600;
+    
+    static constexpr const char* windowTitle = "AirHockey";
+    
+    static constexpr sf::Color windowBackgroundColor = sf::Color::Green;
+    
+    void generatePlayers();
+
+    void generatePuck();
+
+    void sendEventToInputActions();
+
+    void movePuck();
 
     std::shared_ptr<AirHockeyPlayer> firstPlayer;
 
     std::shared_ptr<AirHockeyPlayer> secondPlayer;
 
-    void generate();
+    std::shared_ptr<Puck> puck;
 
-    void generateWindow();
+    bool somePlayerWon();
 
-    void movePlayers();
-
-    void generateHockeyPuck();
-
-    void generatePlayers();
-
-    void generateTimer();
-    
-    bool isEndGame();
-    
-    void generatePlayersBindings();
-    
-    void initializePlayers();
-    
-    void movePuck();
-
-    void handleHit(AirHockeyPlayer& player);
-
-    bool isPlayerTouchingPuck(AirHockeyPlayer& player);
-    
-    void tryHandleHit();
-
-    void handleGoal(AirHockeyPlayer& scoredPlayer);
-
-    void tryHandleGoal();
-
-    void tryRestartRound();
-    
-    bool didPuckTouchLeftGoal();
-    
-    bool didPuckTouchRightGoal();
-
-    void restartRound();
-
-    bool shouldRestart = false;
+    sf::Event currentEvent;
 };

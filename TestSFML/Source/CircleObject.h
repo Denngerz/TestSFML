@@ -5,7 +5,7 @@
 class CircleObject
 {
 public:
-    CircleObject(float radius);
+    CircleObject(float radius, unsigned int windowWidth, unsigned int windowHeight);
     
     void initialize(sf::Color color);
 
@@ -29,6 +29,12 @@ public:
 
     std::shared_ptr<sf::CircleShape> getShape() const;
 
+    int windowX;
+
+    int windowY;
+        
+    float speed;
+
 private:
     std::shared_ptr<sf::CircleShape> circle;
     
@@ -37,7 +43,4 @@ private:
     sf::Vector2f direction;
     
     float circleRadius;
-    
-    float speed;
-
 };

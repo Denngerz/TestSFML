@@ -1,11 +1,15 @@
 ﻿#include "CircleObject.h"
-#include "Time.h"
+#include "../Time/Time.h"
 
-CircleObject::CircleObject(float radius)
+CircleObject::CircleObject(float radius, unsigned int windowWidth, unsigned int windowHeight)
 {
     circleRadius = radius;
 
     circle = std::make_shared<sf::CircleShape>(radius);
+
+    windowX = windowWidth;
+
+    windowY = windowHeight;
 }
 
 void CircleObject::initialize(sf::Color color)

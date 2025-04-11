@@ -1,11 +1,15 @@
 ﻿#include "Mallet.h"
 
-Mallet::Mallet(float radius): CircleObject(radius)
+Mallet::Mallet(float radius, sf::Color color, bool isOnLeft, int windowX, int windowY): CircleObject(radius, windowX, windowY)
 {
     malletRadius = radius;
+    
+    initialize(color, isOnLeft);
+
+    setInitialPosition();
 }
 
-void Mallet::initialize(sf::Color color, bool isOnLeft, int windowX, int windowY)
+void Mallet::initialize(sf::Color color, bool isOnLeft)
 {
     CircleObject::initialize(color);
 
@@ -13,12 +17,12 @@ void Mallet::initialize(sf::Color color, bool isOnLeft, int windowX, int windowY
 
     malletShape = getShape();
 
-    setInitialPosition(windowX, windowY);
+    setInitialPosition();
 
     setSpeed(malletSpeed);
 }
 
-void Mallet::setInitialPosition(int windowX, int windowY)
+void Mallet::setInitialPosition()
 {
     if(isMalletOnLeft)
     {
@@ -30,24 +34,24 @@ void Mallet::setInitialPosition(int windowX, int windowY)
     }
 }
 
-void Mallet::move(int windowX, int windowY)
+void Mallet::move()
 {
     CircleObject::move();
 
-    handleWallCollision(windowX, windowY);
+    handleWallCollision();
 }
 
-void Mallet::handleWallCollision(int windowX, int windowY)
+void Mallet::handleWallCollision()
 {
     sf::Vector2f pos = getPosition();
 
-    handleVerticalCollision(pos, windowY);
-    handleHorizontalCollision(pos, windowX);
+    handleVerticalCollision(pos);
+    handleHorizontalCollision(pos);
 
     setPosition(pos);
 }
 
-void Mallet::handleVerticalCollision(sf::Vector2f& pos, int windowY)
+void Mallet::handleVerticalCollision(sf::Vector2f& pos)
 {
     if (pos.y - malletRadius < 0.f)
     {
@@ -59,7 +63,7 @@ void Mallet::handleVerticalCollision(sf::Vector2f& pos, int windowY)
     }
 }
 
-void Mallet::handleHorizontalCollision(sf::Vector2f& pos, int windowX)
+void Mallet::handleHorizontalCollision(sf::Vector2f& pos)
 {
     if (pos.x - malletRadius < 0.f)
     {
